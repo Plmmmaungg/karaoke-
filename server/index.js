@@ -12,6 +12,9 @@ const allowedOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
 
 app.use(cors({ origin: allowedOrigin === '*' ? true : allowedOrigin.split(',').map(s => s.trim()) }));
 app.use(express.json({ limit: '100kb' }));
+app.get('/', (_req, res) => {
+  res.send('Karaoke server is running!');
+});
 
 const io = new Server(httpServer, {
   cors: { origin: allowedOrigin === '*' ? true : allowedOrigin.split(',').map(s => s.trim()), methods: ['GET', 'POST'] }
