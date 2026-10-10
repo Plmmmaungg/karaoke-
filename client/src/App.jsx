@@ -92,7 +92,9 @@ export default function App() {
     if (q.length < 2) return;
     setSearching(true); setSearchError(''); setResults([]);
     try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+      const response = await fetch(
+  `${SERVER_URL}/api/search?q=${encodeURIComponent(q)}`
+);
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Search failed.');
       setResults(data.results || []);
@@ -259,7 +261,7 @@ export default function App() {
           <form className="manual-link" onSubmit={addManualSong}><label htmlFor="youtube-link">Or add a YouTube link</label><div><input id="youtube-link" value={manualUrl} onChange={e => setManualUrl(e.target.value)} placeholder="Paste YouTube URL or video ID" /><button className="button button-secondary" type="submit">Add link</button></div></form>
           {searchError && <div className="inline-error">{searchError}</div>}
           {results.length > 0 && <div className="results-heading"><h2>Search results</h2><span>{results.length} videos</span></div>}
-          <div className="results-list">{results.map((song, index) => <article className="result-card" key={`${song.videoId}-${index}`}><img src={song.thumbnail || `https://img.youtube.com/vi/${song.videoId}/mqdefault.jpg`} alt="" /><div className="result-info"><strong>{song.title}</strong><span>{song.channel}</span><small>▶ YouTube karaoke</small></div><button className="add-button" onClick={() => addSong(song)} aria-label={`Add ${song.title} to queue`}>＋ <span>Add</span></button></article>)}</div>}
+          <div className="results-list">{results.map((song, index) => <article className="result-card" key={`${song.videoId}-${index}`}><img src={song.thumbnail || `https://img.youtube.com/vi/${song.videoId}/mqdefault.jpg`} alt="" /><div className="result-info"><strong>{song.title}</strong><span>{song.channel}</span><small>▶ YouTube karaoke</small></div><button className="add-button" onClick={() => addSong(song)} aria-label={`Add ${song.title} to queue`}>＋ <span>Add</span></button></article>)}</div>
           {!results.length && !searching && !searchError && <div className="remote-empty"><div className="remote-note">♫</div><h2>Find your sing-along</h2><p>Search for a song or paste a YouTube link. Your request goes to the queue, not straight to the player.</p></div>}
           <section className="remote-queue panel"><div className="panel-heading"><div><span className="section-kicker">COMING UP</span><h2>Queue <span className="count-badge">{queue.length}</span></h2></div></div>{queue.length ? queue.slice(0, 8).map((song, i) => <div className="queue-item" key={song.queueId}><span className="queue-index">{String(i + 1).padStart(2, '0')}</span><img src={song.thumbnail || `https://img.youtube.com/vi/${song.videoId}/default.jpg`} alt="" /><div className="queue-song"><strong>{song.title}</strong><small>Requested by {song.requestedBy}</small></div></div>) : <p className="queue-empty-text">No songs yet. Be the first to request one!</p>}</section>
           <div className="remote-footer">Made for the group chat that became a karaoke night. <span>♫</span></div>
